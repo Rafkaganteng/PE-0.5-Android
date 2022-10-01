@@ -23,7 +23,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
-import flixel.FlxCamera;
 import Controls;
 
 using StringTools;
@@ -133,15 +132,6 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 		changeSelection();
 		reloadCheckboxes();
-
-		#if mobileC
-		addVirtualPad(FULL, A_B);
-		
-		var camcontrol = new FlxCamera();
-		FlxG.cameras.add(camcontrol);
-		camcontrol.bgColor.alpha = 0;
-		_virtualpad.cameras = [camcontrol];
-		#end	
 	}
 
 	var nextAccept:Int = 5;
@@ -159,9 +149,9 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		}
 
 		if (controls.BACK) {
+			close();
 			ClientPrefs.saveSettings();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			MusicBeatState.resetState();
 		}
 
 		if(nextAccept <= 0)

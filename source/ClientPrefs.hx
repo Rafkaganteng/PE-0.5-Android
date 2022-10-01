@@ -8,7 +8,11 @@ import Controls;
 
 class ClientPrefs {
 	public static var downScroll:Bool = false;
+	public static var hitSound:Bool = false;
+	public static var shaders:Bool = true;
+	public static var bigHP:Bool = false;
 	public static var middleScroll:Bool = false;
+	public static var reanimatedbf:Bool = false;
 	public static var showFPS:Bool = true;
 	public static var flashing:Bool = true;
 	public static var globalAntialiasing:Bool = true;
@@ -27,11 +31,7 @@ class ClientPrefs {
 	public static var scoreZoom:Bool = true;
 	public static var noReset:Bool = false;
 	public static var healthBarAlpha:Float = 1;
-	#if mobile
-	public static var controllerMode:Bool = true;
-	#else
 	public static var controllerMode:Bool = false;
-	#end
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
 		'songspeed' => 1.0,
@@ -86,6 +86,10 @@ class ClientPrefs {
 
 	public static function saveSettings() {
 		FlxG.save.data.downScroll = downScroll;
+		FlxG.save.data.hitSound = hitSound;
+		FlxG.save.data.reanimatedbf = reanimatedbf;
+		FlxG.save.data.shaders = shaders;
+		FlxG.save.data.bigHP = bigHP;
 		FlxG.save.data.middleScroll = middleScroll;
 		FlxG.save.data.showFPS = showFPS;
 		FlxG.save.data.flashing = flashing;
@@ -129,6 +133,15 @@ class ClientPrefs {
 	public static function loadPrefs() {
 		if(FlxG.save.data.downScroll != null) {
 			downScroll = FlxG.save.data.downScroll;
+		}
+		if(FlxG.save.data.hitSound != null) {
+			hitSound = FlxG.save.data.hitSound;
+		}
+		if(FlxG.save.data.hitSound != null) {
+			shaders = FlxG.save.data.shaders;
+		}
+		if(FlxG.save.data.bigHP != null) {
+			bigHP = FlxG.save.data.bigHP;
 		}
 		if(FlxG.save.data.middleScroll != null) {
 			middleScroll = FlxG.save.data.middleScroll;

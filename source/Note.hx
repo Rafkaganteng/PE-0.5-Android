@@ -35,7 +35,6 @@ class Note extends FlxSprite
 
 	public var colorSwap:ColorSwap;
 	public var inEditor:Bool = false;
-	public var gfNote:Bool = false;
 	private var earlyHitMult:Float = 0.5;
 
 	public static var swagWidth:Float = 160 * 0.7;
@@ -101,8 +100,15 @@ class Note extends FlxSprite
 					hitCausesMiss = true;
 				case 'No Animation':
 					noAnimation = true;
-				case 'GF Sing':
-					gfNote = true;
+				case 'Glitch Note':
+                    ignoreNote = mustPress;
+                    reloadNote('GLITCH');
+                    noteSplashTexture = 'HURTnoteSplashes';
+                    colorSwap.hue = 0;
+                    colorSwap.saturation = 0;
+                    colorSwap.brightness = 0;
+
+                    hitCausesMiss = true;
 			}
 			noteType = value;
 		}

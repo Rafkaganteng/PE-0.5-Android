@@ -40,7 +40,14 @@ class CreditsState extends MusicBeatState
 		DiscordClient.changePresence("In the Menus", null);
 		#end
 
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
+		bg.scale.set(0.622, 0.622);
+		bg.scrollFactor.set(0, 0);
+		bg.updateHitbox();
+		bg.screenCenter();
+		bg.y += 75;
+		bg.x += 15;
+		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
@@ -66,11 +73,24 @@ class CreditsState extends MusicBeatState
 		#end
 
 		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
-			['Psych Engine Android'],
-			['M.A. Jigsaw',		    'majigsaw',		    'Main Coder of The Port',	 'https://www.youtube.com/channel/UC2Sk7vtPzOvbVzdVTWrribQ',	    'F73838'],
-			['Sirox',		        'sirox',		    'Fixed a lot of shit, added videoBG, help with editors',	                 'https://www.youtube.com/channel/UCqp6FttWJlp67vHT8n-_uKw',	    '261EA9'],		
-			['ELfox',               'elfox',            'Created The Method To Port Modding Features',                    'https://t.me/ELfox513',           '53E52C'],				
-			[''],
+			['Animation VS FNF Team'],
+			['Sir Chapurato', 			'sirchap',			'Director and Charter',			'https://www.youtube.com/channel/UC37f51A8bNepi7PvD8owOxQ'],
+			['Salty Sovet',			'funnisovet',			'Lead coder and Co-Director', 			'https://www.youtube.com/channel/UC1qT2vh0aORFdHA4cVAHZUw'],
+			['Surge SPB',	'noiconhaha',	'Music (coolswag)',		'https://youtube.com/c/SurgeSPBMakesMusic'],
+			['Spoon Dice Music',	'spoonicon',	'Music swaggers',		'https://www.youtube.com/c/SpoonDice'],
+			['Ekical',			'ekicalcoolswag',		'Coder',		'https://www.youtube.com/c/Ekical'], //coolswag
+			['Nom_lol',         'nomm',          'Coder',         'https://www.youtube.com/channel/UCSTIop1Eo1bkpqVTbGSE9WQ'], //balls
+			['Vidz',			'videos',		'Coder',		'https://twitter.com/ItsVidz3'], //fuck yoy
+			['Yes, Its bee',		'thefucingbee',		'Artist',		'https://www.youtube.com/channel/UCi4COUcfP89Il-PKJ33DlNg'],
+			['Hexal',	'hexal',	'Artist/Animator',	'https://www.youtube.com/c/Hexalhaxel'],
+			['Savia', 'Savie', 'Artist', 'https://www.youtube.com/channel/UCFmLZpOectYN9VGcrz89KTA'],
+			['Cheese Farmer',	'CHEESE',	'Artist',	'https://www.youtube.com/channel/UCGSX2AqYE98-Rq59qINt3BQ'],
+			['Sensisgone', 'sens', 'Charting', 'https://www.youtube.com/channel/UCtcQQMhWDd_v7tgwbfNuW3w'],				
+			['Serkoid',			'noiconhaha',			'Coder and Artist',			'https://www.youtube.com/channel/UCWXYCOhrmye32o-zvu-GtPQ'],
+			['Chromasen',		'noiconhaha',		'Coder',		'https://twitter.com/ChromaSen'],
+			['Reginald Reborn', 'noiconhaha', 'Charting', 'https://gamebanana.com/members/2011865'],
+			['CancerPinguin2.0', 'noiconhaha', 'Charting', 'https://steamcommunity.com/profiles/76561198886673790/'],
+			['LeGoldenBoots', 'noiconhaha', 'Coding', 'https://www.youtube.com/channel/UCysojweWJ_X3iaTAMAvNFCQ'],
 			['Psych Engine Team'],
 			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',						'https://twitter.com/Shadow_Mario_',	'FFDD33'],
 			['RiverOaken',			'riveroaken',		'Main Artist/Animator of Psych Engine',					'https://twitter.com/river_oaken',		'C30085'],
@@ -134,14 +154,7 @@ class CreditsState extends MusicBeatState
 		descText.borderSize = 2.4;
 		add(descText);
 
-		bg.color = getCurrentBGColor();
-		intendedColor = bg.color;
 		changeSelection();
-
-		#if mobileC
-        addVirtualPad(UP_DOWN, A_B);
-        #end
-
 		super.create();
 	}
 
@@ -189,19 +202,6 @@ class CreditsState extends MusicBeatState
 				curSelected = 0;
 		} while(unselectableCheck(curSelected));
 
-		var newColor:Int =  getCurrentBGColor();
-		if(newColor != intendedColor) {
-			if(colorTween != null) {
-				colorTween.cancel();
-			}
-			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
-				onComplete: function(twn:FlxTween) {
-					colorTween = null;
-				}
-			});
-		}
-
 		var bullShit:Int = 0;
 
 		for (item in grpOptions.members)
@@ -217,14 +217,6 @@ class CreditsState extends MusicBeatState
 			}
 		}
 		descText.text = creditsStuff[curSelected][2];
-	}
-
-	function getCurrentBGColor() {
-		var bgColor:String = creditsStuff[curSelected][4];
-		if(!bgColor.startsWith('0x')) {
-			bgColor = '0xFF' + bgColor;
-		}
-		return Std.parseInt(bgColor);
 	}
 
 	private function unselectableCheck(num:Int):Bool {

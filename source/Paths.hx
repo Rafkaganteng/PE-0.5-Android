@@ -20,6 +20,7 @@ using StringTools;
 class Paths
 {
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
+	inline public static var VIDEO_EXT = "mp4";
 
 	#if MODS_ALLOWED
 	#if (haxe >= "4.0.0")
@@ -92,6 +93,13 @@ class Paths
 		return getPreloadPath(file);
 	}
 
+	inline static public function lowhpmusic(song:String)
+		{
+			return 'songs:assets/songs/${song.toLowerCase()}/InstLowHP.$SOUND_EXT';
+		}
+
+
+
 	static public function getLibraryPath(file:String, library = "preload")
 	{
 		return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);
@@ -132,17 +140,6 @@ class Paths
 		return getPath('$key.lua', TEXT, library);
 	}
 
-	static public function video(key:String)
-	{
-		#if MODS_ALLOWED
-		var file:String = modsVideo(key);
-		if(FileSystem.exists(file)) {
-			return file;
-		}
-		#end
-		return Main.getDataPath() + 'assets/videos/$key.html';
-	}
-
 	static public function sound(key:String, ?library:String):Dynamic
 	{
 		#if MODS_ALLOWED
@@ -161,6 +158,12 @@ class Paths
 	{
 		return sound(key + FlxG.random.int(min, max), library);
 	}
+
+	inline static public function video(key:String, ?library:String)
+		{
+			trace('assets/videos/$key.mp4');
+			return getPath('videos/$key.mp4', BINARY, library);
+		}
 
 	inline static public function music(key:String, ?library:String):Dynamic
 	{
@@ -184,7 +187,7 @@ class Paths
 			return file;
 		}
 		#end
-		return returnSongFile(Main.getDataPath() + 'assets/songs/${song.toLowerCase().replace(' ', '-')}/Voices.$SOUND_EXT');
+		return 'songs:assets/songs/${song.toLowerCase().replace(' ', '-')}/Voices.$SOUND_EXT';
 	}
 
 	inline static public function inst(song:String):Any
@@ -195,7 +198,7 @@ class Paths
 			return file;
 		}
 		#end
-		return returnSongFile(Main.getDataPath() + 'assets/songs/${song.toLowerCase().replace(' ', '-')}/Inst.$SOUND_EXT');
+		return 'songs:assets/songs/${song.toLowerCase().replace(' ', '-')}/Inst.$SOUND_EXT';
 	}
 
 	#if MODS_ALLOWED
@@ -238,21 +241,21 @@ class Paths
 			return File.getContent(mods(key));
 		#end
 
-		if (FileSystem.exists(Main.getDataPath() + getPreloadPath(key)))
-			return File.getContent(Main.getDataPath() + getPreloadPath(key));
+		if (FileSystem.exists(getPreloadPath(key)))
+			return File.getContent(getPreloadPath(key));
 
 		if (currentLevel != null)
 		{
 			var levelPath:String = '';
 			if(currentLevel != 'shared') {
 				levelPath = getLibraryPathForce(key, currentLevel);
-				if (FileSystem.exists(Main.getDataPath() + levelPath))
+				if (FileSystem.exists(levelPath))
 					return File.getContent(levelPath);
 			}
 
 			levelPath = getLibraryPathForce(key, 'shared');
-			if (FileSystem.exists(Main.getDataPath() + levelPath))
-				return File.getContent(Main.getDataPath() + levelPath);
+			if (FileSystem.exists(levelPath))
+				return File.getContent(levelPath);
 		}
 		#end
 		return Assets.getText(getPath(key, TEXT));
@@ -266,7 +269,7 @@ class Paths
 			return file;
 		}
 		#end
-		return Main.getDataPath() + 'assets/fonts/$key';
+		return 'assets/fonts/$key';
 	}
 
 	inline static public function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?library:String)
@@ -333,7 +336,7 @@ class Paths
 	}
 
 	inline static public function mods(key:String = '') {
-		return Main.getDataPath() + 'mods/' + key;
+		return 'mods/' + key;
 	}
 	
 	inline static public function modsFont(key:String) {
@@ -344,8 +347,8 @@ class Paths
 		return modFolders('data/' + key + '.json');
 	}
 
-	static public function modsVideo(key:String) {
-                return modFolders('videos/' + key + '.' + SOUND_EXT);
+	inline static public function modsVideo(key:String) {
+		return modFolders('videos/' + key + '.' + VIDEO_EXT);
 	}
 
 	inline static public function modsMusic(key:String) {
@@ -379,7 +382,7 @@ class Paths
 				return fileToCheck;
 			}
 		}
-		return Main.getDataPath() + 'mods/' + key;
+		return 'mods/' + key;
 	}
 
 	static public function getModDirectories():Array<String> {
