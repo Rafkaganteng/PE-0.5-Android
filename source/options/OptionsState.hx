@@ -29,13 +29,15 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Note Colors', 'Controls', 'Mobile Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'];
+	var options:Array<String> = ['Animation VS FNF Options', 'Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
 
 	function openSelectedSubstate(label:String) {
 		switch(label) {
+			case 'Animation VS FNF Options':
+				openSubState(new options.AVFSettingsSubState());
 			case 'Note Colors':
 				openSubState(new options.NotesSubState());
 			case 'Controls':
@@ -48,8 +50,6 @@ class OptionsState extends MusicBeatState
 				openSubState(new options.GameplaySettingsSubState());
 			case 'Adjust Delay and Combo':
 				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
-			case 'Mobile Controls':
-				MusicBeatState.switchState(new options.CustomControlsState());				
 		}
 	}
 
@@ -61,13 +61,15 @@ class OptionsState extends MusicBeatState
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
-		bg.setGraphicSize(Std.int(bg.width * 1.1));
-		bg.updateHitbox();
-		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
-		add(bg);
+		menuBG = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
+		menuBG.scale.set(0.622, 0.622);
+		menuBG.scrollFactor.set(0, 0);
+		menuBG.updateHitbox();
+		menuBG.screenCenter();
+		menuBG.y += 75;
+		menuBG.x += 15;
+		menuBG.antialiasing = ClientPrefs.globalAntialiasing;
+		add(menuBG);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
@@ -86,10 +88,7 @@ class OptionsState extends MusicBeatState
 		add(selectorRight);
 
 		changeSelection();
-
-		#if mobileC
-                addVirtualPad(UP_DOWN, A_B);
-                #end
+		ClientPrefs.saveSettings();
 
 		super.create();
 	}
